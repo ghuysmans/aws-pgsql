@@ -2,4 +2,4 @@
 set -e
 
 sh config.sh >/etc/pgpool.conf
-exec pgpool -n -D -d
+exec pgpool -n -D

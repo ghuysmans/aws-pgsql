@@ -17,31 +17,23 @@ allow_sql_comments = on
 EOF
 
 
-#gets a text value related to a particular RDS instance
-#arguments: instance ID, path below the DBInstance
-dbi() { #instance, query
-	#we directly print the result since functions can't return anything
-	aws rds describe-db-instances \
-		--region eu-west-1 \
-		--db-instance-identifier $1 \
-		--output text \
-		--query "DBInstances[0].$2"
-}
-
-(
-	echo $APP_PROFILE; #the read/write server
-	dbi $APP_PROFILE ReadReplicaDBInstanceIdentifiers
-) | while read -r id; do #no indentation, otherwise `<< EOF` doesn't work
-#for each server,
+aws rds describe-db-instances --region eu-west-1 |
+jq -r ".DBInstances | ( #it's the only object in there
+	map(select(.DBInstanceIdentifier == \"$APP_PROFILE\")) +
+	map(select(.ReadReplicaSourceDBInstanceIdentifier == \"$APP_PROFILE\")) ) |
+	#get their addresses
+	map(.Endpoint.Address) |
+	#convert the output array to multiple results (in conjunction with -r)
+	.[]" |
+while read -r server; do
+#no indentation, otherwise `<< EOF` doesn't work
 #first generate a sequence number
 if [ -z "$i" ]; then
 	i=0
 else
 	i=$((i+1))
 fi
-#then fetch its FQDN
-server=`dbi $id Endpoint.Address`
-#finally emit the configuration stanza
+#then emit the corresponding stanza
 cat << EOF
 
 backend_hostname$i = '$server'

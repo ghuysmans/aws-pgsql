@@ -4,5 +4,6 @@ RUN apk --update --no-cache add pgpool py2-pip && \
 RUN mkdir /var/run/pgpool
 EXPOSE 5432
 
+RUN apk --no-cache add jq
 COPY config.sh run.sh /root/
 WORKDIR /root
