@@ -36,10 +36,8 @@ dbi() { #instance, query
 #first generate a sequence number
 if [ -z "$i" ]; then
 	i=0
-	flags=,ALWAYS_MASTER
 else
 	i=$((i+1))
-	flags=
 fi
 #then fetch its FQDN
 server=`dbi $id Endpoint.Address`
@@ -49,6 +47,6 @@ cat << EOF
 backend_hostname$i = '$server'
 backend_port$i = 5432
 backend_weight$i = 1
-backend_flag$i = 'ALLOW_TO_FAILOVER$flags'
+backend_flag$i = 'ALLOW_TO_FAILOVER'
 EOF
 done
