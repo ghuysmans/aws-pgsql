@@ -8,6 +8,11 @@ listen_addresses = '*'
 port = 5432
 pcp_port = 9898
 pcp_socket_dir = '/tmp'
+insert_lock = off
+load_balance_mode = on
+master_slave_mode = on
+master_slave_sub_mode = 'stream'
+allow_sql_comments = on
 
 EOF
 
@@ -31,8 +36,10 @@ dbi() { #instance, query
 #first generate a sequence number
 if [ -z "$i" ]; then
 	i=0
+	flags=,ALWAYS_MASTER
 else
 	i=$((i+1))
+	flags=
 fi
 #then fetch its FQDN
 server=`dbi $id Endpoint.Address`
@@ -42,7 +49,6 @@ cat << EOF
 backend_hostname$i = '$server'
 backend_port$i = 5432
 backend_weight$i = 1
-backend_data_directory$i = '/tmp'
-backend_flag$i = 'DISALLOW_TO_FAILOVER'
+backend_flag$i = 'ALLOW_TO_FAILOVER$flags'
 EOF
 done
