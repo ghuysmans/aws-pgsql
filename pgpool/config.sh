@@ -1,4 +1,8 @@
 #!/bin/sh
+set -e
+
+check_user=pgpool
+check_password=thisisabadpassword
 
 
 #header
@@ -13,6 +17,14 @@ load_balance_mode = on
 master_slave_mode = on
 master_slave_sub_mode = 'stream'
 allow_sql_comments = on
+enable_pool_hba = on
+white_function_list = '$ALLOWED'
+#used to determine that the first server is the master
+#CREATE ROLE pgpool WITH LOGIN PASSWORD 'secret';
+#GRANT CONNECT ON DATABASE db TO pgpool;
+sr_check_user = '$check_user'
+sr_check_password = '$check_password'
+sr_check_database = '$APP_PROFILE'
 
 EOF
 

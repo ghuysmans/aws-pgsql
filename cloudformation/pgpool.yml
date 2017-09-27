@@ -35,6 +35,7 @@ Resources:
           PortMappings: [ContainerPort: 5432]
           Environment:
             - {Name: "APP_PROFILE", Value: !Ref Environment}
+            - {Name: "CONFIG", Value: !ImportValue ConfigurationS3Bucket}
           LogConfiguration:
             LogDriver: awslogs
             Options:
@@ -58,6 +59,16 @@ Resources:
               - Effect: Allow
                 Action: "rds:DescribeDBInstances"
                 Resource: "*"
+        #FIXME? http://docs.aws.amazon.com/AWSCloudFormation/latest/UserGuide/aws-resource-iam-managedpolicy.html
+        - PolicyName: get-config-information
+          PolicyDocument:
+            Statement:
+              - Effect: Allow
+                Action: "s3:GetObject"
+                Resource:
+                  !Sub
+                  - "arn:aws:s3:::${Bucket}/${Environment}*"
+                  - {Bucket: !ImportValue ConfigurationS3Bucket}
   DbService:
     Type: AWS::ECS::Service
     DependsOn: [DbListener]

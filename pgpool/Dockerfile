@@ -5,5 +5,6 @@ RUN mkdir /var/run/pgpool
 EXPOSE 5432
 
 RUN apk --no-cache add jq
-COPY config.sh run.sh /root/
+COPY config.sh run.sh passwd.sh /root/
+COPY pool_hba.conf /etc/
 WORKDIR /root
