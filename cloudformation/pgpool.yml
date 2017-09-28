@@ -20,6 +20,10 @@ Parameters:
   WriteFunctions:
     Type: String
     Description: Comma-separated list of functions writing to the database
+  Database:
+    Type: String
+    Default: bs
+    Description: PostgreSQL database name
 Resources:
   DbBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -40,6 +44,7 @@ Resources:
             - {Name: "APP_PROFILE", Value: !Ref Environment}
             - {Name: "CONFIG", Value: !ImportValue ConfigurationS3Bucket}
             - {Name: "BLACK", Value: !Ref WriteFunctions}
+            - {Name: "DB", Value: !Ref Database}
           LogConfiguration:
             LogDriver: awslogs
             Options:

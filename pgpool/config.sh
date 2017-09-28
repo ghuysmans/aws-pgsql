@@ -24,7 +24,7 @@ black_function_list = '$BLACK'
 #GRANT CONNECT ON DATABASE db TO pgpool;
 sr_check_user = '$check_user'
 sr_check_password = '$check_password'
-sr_check_database = '$APP_PROFILE'
+sr_check_database = '$DB'
 
 EOF
 
