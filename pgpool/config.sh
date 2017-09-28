@@ -18,7 +18,7 @@ master_slave_mode = on
 master_slave_sub_mode = 'stream'
 allow_sql_comments = on
 enable_pool_hba = on
-white_function_list = '$ALLOWED'
+black_function_list = '$BLACK'
 #used to determine that the first server is the master
 #CREATE ROLE pgpool WITH LOGIN PASSWORD 'secret';
 #GRANT CONNECT ON DATABASE db TO pgpool;

@@ -17,6 +17,9 @@ Parameters:
     Type: String
     Default: 449128836998.dkr.ecr.eu-west-1.amazonaws.com/
     Description: Address of the Docker repository.
+  WriteFunctions:
+    Type: String
+    Description: Comma-separated list of functions writing to the database
 Resources:
   DbBalancer:
     Type: AWS::ElasticLoadBalancingV2::LoadBalancer
@@ -36,6 +39,7 @@ Resources:
           Environment:
             - {Name: "APP_PROFILE", Value: !Ref Environment}
             - {Name: "CONFIG", Value: !ImportValue ConfigurationS3Bucket}
+            - {Name: "BLACK", Value: !Ref WriteFunctions}
           LogConfiguration:
             LogDriver: awslogs
             Options:
